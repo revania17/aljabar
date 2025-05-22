@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Invers Matriks 2x2 & 3x3 (Pecahan)</title>
+<style>
+  :root {
+    --bg: #fef6e4;
+    --primary: #a7c5eb;
+    --primary-dark: #6a9bd6;
+    --text: #2d2d2d;
+    --input-bg: #f0f4fa;
+    --border: #ccc;
+    --accent: #f7cac9;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    padding: 30px 20px;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    color: var(--text);
+  }
+
+  .container {
+    background: white;
+    padding: 30px 30px 30px 40px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 1100px;
+    width: 100%;
+    display: flex;
+    gap: 35px;
+    height: 100%;
+  }
+
+  .main-area {
+    flex: 1 1 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 45px;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--primary-dark);
+    font-weight: 700;
+  }
+
+  h2 {
+    margin-bottom: 12px;
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+
+  .matrix-input-2x2,
+  .matrix-input-3x3 {
+    display: grid;
+    gap: 14px;
+    justify-content: center;
+  }
+
+  .matrix-input-2x2 {
+    grid-template-columns: repeat(2, 65px);
+  }
+
+  .matrix-input-3x3 {
+    grid-template-columns: repeat(3, 65px);
+  }
+
+  input[type=number] {
+    width: 65px;
+    padding: 12px 0;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 14px;
+    background: var(--input-bg);
+    border: 1.8px solid var(--border);
+    transition: border-color 0.3s ease;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  input[type=number]:focus {
+    outline: none;
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 8px #a0bdfd;
+  }
+
+  button {
+    width: 180px;
+    padding: 14px 0;
+    background: var(--primary);
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    align-self: center;
+    box-shadow: 0 5px 15px rgba(106,155,214,0.5);
+  }
+
+  button:hover {
+    background: var(--primary-dark);
+  }
+
+  #hasil2x2, #hasil3x3 {
+    margin-top: 15px;
+    min-height: 90px;
+    border-radius: 12px;
+    background: #f9faff;
+    padding: 15px 20px;
+    box-shadow: inset 0 0 10px #d3e0ff;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  td {
+    border: 1.5px solid var(--border);
+    padding: 12px;
+    text-align: center;
+    background: #f0f5ff;
+    font-size: 17px;
+    min-width: 45px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    border-radius: 8px;
+  }
+
+  .error {
+    color: #d94b4b;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .penjelasan {
+    flex: 1 1 40%;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--accent);
+    padding: 25px 30px;
+    border-radius: 18px;
+    border: 1.5px solid #f1cac9;
+    overflow-y: auto;
+    max-height: 100%;
+    box-shadow: 0 6px 18px rgba(247, 202, 201, 0.7);
+  }
+
+  .penjelasan h2 {
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: #ba5a58;
+    text-align: center;
+  }
+
+  .penjelasan ol {
+    padding-left: 20px;
+  }
+
+  .penjelasan li {
+    margin-bottom: 12px;
+  }
+
+  .penjelasan code {
+    background: #e8f0fe;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="main-area">
+
+      <section class="section-2x2">
+        <h1>Invers Matriks 2x2</h1>
+        <div class="matrix-input-2x2" aria-label="Input matriks 2x2">
+          <input type="number" id="b00" value="4" min="1" aria-label="Elemen baris 1 kolom 1"/>
+          <input type="number" id="b01" value="7" min="1" aria-label="Elemen baris 1 kolom 2"/>
+          <input type="number" id="b10" value="2" min="1" aria-label="Elemen baris 2 kolom 1"/>
+          <input type="number" id="b11" value="6" min="1" aria-label="Elemen baris 2 kolom 2"/>
+        </div>
+        <button onclick="hitungInvers2x2()">Hitung Invers 2x2</button>
+        <div id="hasil2x2" role="region" aria-live="polite"></div>
+      </section>
+
+      <section class="section-3x3">
+        <h1>Invers Matriks 3x3</h1>
+        <div class="matrix-input-3x3" aria-label="Input matriks 3x3">
+          <input type="number" id="a00" value="2" min="1" aria-label="Elemen baris 1 kolom 1"/>
+          <input type="number" id="a01" value="1" min="1" aria-label="Elemen baris 1 kolom 2"/>
+          <input type="number" id="a02" value="3" min="1" aria-label="Elemen baris 1 kolom 3"/>
+          <input type="number" id="a10" value="1" min="1" aria-label="Elemen baris 2 kolom 1"/>
+          <input type="number" id="a11" value="3" min="1" aria-label="Elemen baris 2 kolom 2"/>
+          <input type="number" id="a12" value="2" min="1" aria-label="Elemen baris 2 kolom 3"/>
+          <input type="number" id="a20" value="4" min="1" aria-label="Elemen baris 3 kolom 1"/>
+          <input type="number" id="a21" value="1" min="1" aria-label="Elemen baris 3 kolom 2"/>
+          <input type="number" id="a22" value="1" min="1" aria-label="Elemen baris 3 kolom 3"/>
+        </div>
+        <button onclick="hitungInvers3x3()">Hitung Invers 3x3</button>
+        <div id="hasil3x3" role="region" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <aside class="penjelasan" aria-label="Penjelasan cara kerja program">
+      <h2>Penjelasan Program</h2>
+
+      <h3>Input Matriks</h3>
+      <p>Pengguna mengisi nilai elemen matriks 2x2 atau 3x3 di kolom input yang sudah disediakan dengan nilai bilangan bulat positif (minimal 1), agar tidak ada elemen 0 yang membuat hasil invers tidak valid.</p>
+
+      <h3>Perhitungan Invers Matriks 2x2</h3>
+      <ol>
+        <li>Mengambil nilai input matriks 2x2 dan membentuk array 2D <code>[[a,b],[c,d]]</code>.</li>
+        <li>Menghitung determinan dengan rumus: <code>det = a*d - b*c</code>.</li>
+        <li>Jika determinan 0, matriks tidak bisa di-invers, tampilkan pesan error.</li>
+        <li>Jika determinan bukan 0, hitung invers dengan rumus: <code>1/det * [[d, -b], [-c, a]]</code>.</li>
+        <li>Hasil invers ditampilkan sebagai pecahan sederhana (misal 1/2, -3/4), agar lebih mudah dipahami.</li>
+        <li>Hasil ditampilkan dalam tabel rapi.</li>
+      </ol>
+
+      <h3>Perhitungan Invers Matriks 3x3</h3>
+      <ol>
+        <li>Mengambil nilai input matriks 3x3 dan membentuk array 2D 3x3.</li>
+        <li>Menghitung determinan dengan metode Sarrus.</li>
+        <li>Jika determinan 0, tampilkan pesan error.</li>
+        <li>Jika determinan bukan 0, hitung matriks kofaktor dengan menghitung minor dan menambahkan tanda (+/-).</li>
+        <li>Transpose matriks kofaktor menjadi adjoin.</li>
+        <li>Bagi setiap elemen matriks adjoin dengan determinan untuk mendapatkan invers.</li>
+        <li>Hasil invers ditampilkan sebagai pecahan sederhana (misal 1/2, -3/4).</li>
+        <li>Hasil ditampilkan dalam tabel rapi.</li>
+      </ol>
+
+      <h3>Penggunaan</h3>
+      <p>Program ini membantu menyelesaikan soal aljabar linier mengenai invers matriks dengan cara interaktif dan mudah dimengerti. Penjelasan di samping memudahkan presentasi agar kamu tidak perlu bolak-balik lihat kode.</p>
+    </aside>
+  </div>
+
+<script>
+  // fungsi cari FPB (Greatest Common Divisor)
+  function gcd(a, b) {
+    if (!b) return a;
+    return gcd(b, a % b);
+  }
+
+  // fungsi konversi angka desimal / pecahan ke bentuk pecahan string sederhana
+  function toFraction(num, tolerance = 1.0E-6) {
+    if (num === 0) return "0";
+
+    let sign = num < 0 ? "-" : "";
+    num = Math.abs(num);
+
+    let lower_n = 0;
+    let lower_d = 1;
+    let upper_n = 1;
+    let upper_d = 1;
+
+    while (true) {
+      let middle_n = lower_n + upper_n;
+      let middle_d = lower_d + upper_d;
+      if (middle_d * (num + tolerance) < middle_n) {
+        upper_n = middle_n;
+        upper_d = middle_d;
+      } else if (middle_d * (num - tolerance) > middle_n) {
+        lower_n = middle_n;
+        lower_d = middle_d;
+      } else {
+        let gcdVal = gcd(middle_n, middle_d);
+        return sign + (middle_n / gcdVal) + (middle_d / gcdVal === 1 ? "" : "/" + (middle_d / gcdVal));
+      }
+    }
+  }
+
+  function getMatrix2x2() {
+    return [
+      [Number(document.getElementById('b00').value), Number(document.getElementById('b01').value)],
+      [Number(document.getElementById('b10').value), Number(document.getElementById('b11').value)]
+    ];
+  }
+
+  function getMatrix3x3() {
+    return [
+      [Number(document.getElementById('a00').value), Number(document.getElementById('a01').value), Number(document.getElementById('a02').value)],
+      [Number(document.getElementById('a10').value), Number(document.getElementById('a11').value), Number(document.getElementById('a12').value)],
+      [Number(document.getElementById('a20').value), Number(document.getElementById('a21').value), Number(document.getElementById('a22').value)]
+    ];
+  }
+
+  function determinant2x2(m) {
+    return m[0][0]*m[1][1] - m[0][1]*m[1][0];
+  }
+
+  function inverseMatrix2x2(m) {
+    const det = determinant2x2(m);
+    if(det === 0) return null;
+    const inv = [
+      [m[1][1]/det, -m[0][1]/det],
+      [-m[1][0]/det, m[0][0]/det]
+    ];
+    return inv.map(row => row.map(v => toFraction(v)));
+  }
+
+  // metode sarrus untuk determinan 3x3
+  function determinant3x3(m) {
+    return m[0][0]*m[1][1]*m[2][2] + m[0][1]*m[1][2]*m[2][0] + m[0][2]*m[1][0]*m[2][1] 
+           - m[0][2]*m[1][1]*m[2][0] - m[0][0]*m[1][2]*m[2][1] - m[0][1]*m[1][0]*m[2][2];
+  }
+
+  // matriks minor untuk 3x3
+  function minorMatrix(m, row, col) {
+    const minor = [];
+    for(let i=0; i<3; i++) {
+      if(i === row) continue;
+      const minorRow = [];
+      for(let j=0; j<3; j++) {
+        if(j === col) continue;
+        minorRow.push(m[i][j]);
+      }
+      minor.push(minorRow);
+    }
+    return minor;
+  }
+
+  // determinan minor 2x2
+  function determinant2x2minor(m) {
+    return m[0][0]*m[1][1] - m[0][1]*m[1][0];
+  }
+
+  // matriks kofaktor 3x3
+  function cofactorMatrix(m) {
+    const cof = [];
+    for(let i=0; i<3; i++) {
+      cof[i] = [];
+      for(let j=0; j<3; j++) {
+        const minor = minorMatrix(m,i,j);
+        const detMinor = determinant2x2minor(minor);
+        const sign = ((i+j) % 2 === 0) ? 1 : -1;
+        cof[i][j] = sign * detMinor;
+      }
+    }
+    return cof;
+  }
+
+  function transposeMatrix(m) {
+    const t = [];
+    for(let i=0; i<m.length; i++){
+      for(let j=0; j<m[i].length; j++){
+        if(!t[j]) t[j] = [];
+        t[j][i] = m[i][j];
+      }
+    }
+    return t;
+  }
+
+  function inverseMatrix3x3(m) {
+    const det = determinant3x3(m);
+    if(det === 0) return null;
+    const cof = cofactorMatrix(m);
+    const adj = transposeMatrix(cof);
+    const inv = adj.map(row => row.map(v => toFraction(v / det)));
+    return inv;
+  }
+
+  function renderMatrix(matrix) {
+    if(!matrix) return '<p class="error">Matriks tidak memiliki invers (determinan 0)</p>';
+    let html = '<table aria-label="Matriks hasil invers"><tbody>';
+    for(const row of matrix){
+      html += '<tr>';
+      for(const val of row){
+        html += `<td>${val}</td>`;
+      }
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+    return html;
+  }
+
+  function hitungInvers2x2(){
+    const m = getMatrix2x2();
+    const inv = inverseMatrix2x2(m);
+    document.getElementById('hasil2x2').innerHTML = renderMatrix(inv);
+  }
+
+  function hitungInvers3x3(){
+    const m = getMatrix3x3();
+    const inv = inverseMatrix3x3(m);
+    document.getElementById('hasil3x3').innerHTML = renderMatrix(inv);
+  }
+</script>
+</body>
+</html>
